@@ -3,14 +3,23 @@
 	using System;
 	using System.Collections.Generic;
 	using System.Linq;
-	using GildedRose.WebServices.Models;
+	using Models;
 
+	/// <summary>
+	/// The storage layer for inventory data.
+	/// </summary>
+	/// <seealso cref="GildedRose.WebServices.DataAccess.IDataStore" />
 	public class DataStore : IDataStore
 	{
 		private readonly IDataProvider dataProvider;
 
 		private IList<Item> items;
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="DataStore"/> class.
+		/// </summary>
+		/// <param name="dataProvider">The data provider.</param>
+		/// <exception cref="System.ArgumentNullException">Thrown when dependencies are null.</exception>
 		public DataStore(IDataProvider dataProvider)
 		{
 			if (dataProvider == null)
@@ -34,16 +43,29 @@
 			}
 		}
 
+		/// <summary>
+		/// Gets all of the items from storage.
+		/// </summary>
+		/// <returns> A list of items.</returns>
 		public IList<Item> GetItems()
 		{
 			return this.Items;
 		}
 
+		/// <summary>
+		/// Gets the specified item from storage.
+		/// </summary>
+		/// <param name="id">The identifier.</param>
+		/// <returns> The item.</returns>
 		public Item GetItem(string id)
 		{
 			return this.Items.FirstOrDefault(item => item.Id == id);
 		}
 
+		/// <summary>
+		/// Saves the specified item to storage.
+		/// </summary>
+		/// <param name="itemToSave">The item to save.</param>
 		public void SaveItem(Item itemToSave)
 		{
 			// find it by Id

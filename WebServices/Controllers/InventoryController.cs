@@ -6,6 +6,10 @@
 	using Newtonsoft.Json;
 	using Services;
 
+	/// <summary>
+	/// Provides Inventory methods.
+	/// </summary>
+	/// <seealso cref="System.Web.Http.ApiController" />
 	[Route("Inventory")]
 	public class InventoryController : ApiController
 	{
@@ -14,6 +18,11 @@
 
 		private readonly IInventoryService inventoryService;
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="InventoryController"/> class.
+		/// </summary>
+		/// <param name="inventoryService">The inventory service.</param>
+		/// <exception cref="System.ArgumentNullException">Thrown when dependencies are null.</exception>
 		public InventoryController(IInventoryService inventoryService)
 		{
 			if (inventoryService == null)
@@ -24,6 +33,10 @@
 			this.inventoryService = inventoryService;
 		}
 
+		/// <summary>
+		/// Gets all Inventory items.
+		/// </summary>
+		/// <returns>A list of inventory items as a Json string.</returns>
 		[HttpGet]
 		public IHttpActionResult Get()
 		{
@@ -43,6 +56,11 @@
 			return returnValue;
 		}
 
+		/// <summary>
+		/// Buys the item, if there is sufficient inventory.
+		/// </summary>
+		/// <param name="itemId">The item identifier.</param>
+		/// <returns>A Json string indicating whether or not the purchase was successful.</returns>
 		[HttpPut]
 		[Authorize]
 		public IHttpActionResult BuyItem([FromBody] string itemId)

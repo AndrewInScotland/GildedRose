@@ -1,10 +1,18 @@
 ﻿namespace GildedRose.WebServices.DataAccess
 {
 	using System.Collections.Generic;
-	using GildedRose.WebServices.Models;
+	using Models;
 
+	/// <summary>
+	/// A temporary memory-only data provider.
+	/// </summary>
+	/// <seealso cref="GildedRose.WebServices.DataAccess.IDataProvider" />
 	public class DataProvider : IDataProvider
 	{
+		/// <summary>
+		/// Populates this data provider with ititial data.
+		/// </summary>
+		/// <returns>A list of inventory items.</returns>
 		public IList<Item> ItitializeData()
 		{
 			return new List<Item>
