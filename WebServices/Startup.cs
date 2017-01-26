@@ -24,8 +24,8 @@ namespace GildedRose.WebServices
 		/// <param name="app">The Owin application.</param>
 		public void Configuration(IAppBuilder app)
         {
-            // accept access tokens from identityserver and require a scope of 'api1'
-	        app.UseIdentityServerBearerTokenAuthentication(new IdentityServerBearerTokenAuthenticationOptions
+			// accept access tokens from identityserver and require a scope of 'gildedroseapi'
+			app.UseIdentityServerBearerTokenAuthentication(new IdentityServerBearerTokenAuthenticationOptions
                 {
                     Authority = IdentityServerUrl,
                     ValidationMode = ValidationMode.ValidationEndpoint,
