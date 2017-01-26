@@ -1,13 +1,11 @@
-﻿using System;
-using System.Security.Claims;
-using System.Web.Http;
-
-using GildedRose.WebServices.Services;
-
-using Newtonsoft.Json;
-
-namespace GildedRose.WebServices.Controllers
+﻿namespace GildedRose.WebServices.Controllers
 {
+	using System;
+	using System.Security.Claims;
+	using System.Web.Http;
+	using Newtonsoft.Json;
+	using Services;
+
 	[Route("Inventory")]
 	public class InventoryController : ApiController
 	{
@@ -29,23 +27,27 @@ namespace GildedRose.WebServices.Controllers
 		[HttpGet]
 		public IHttpActionResult Get()
 		{
+			IHttpActionResult returnValue;
+
 			try
 			{
 				var availableItems = this.inventoryService.GetAvailableItems();
 				var jsonResult = JsonConvert.SerializeObject(availableItems);
-				return this.Json(jsonResult);
+				returnValue = this.Json(jsonResult);
 			}
 			catch (Exception)
 			{
-				return this.InternalServerError();
+				returnValue = this.InternalServerError();
 			}
+
+			return returnValue;
 		}
 
 		[HttpPut]
 		[Authorize]
 		public IHttpActionResult BuyItem([FromBody] string itemId)
 		{
-			IHttpActionResult returnValue = null;
+			IHttpActionResult returnValue;
 
 			if (string.IsNullOrEmpty(itemId))
 			{
@@ -56,16 +58,22 @@ namespace GildedRose.WebServices.Controllers
 			{
 				var caller = this.User as ClaimsPrincipal;
 				var subjectClaim = caller?.FindFirst(UserIdentifierClaim);
-				if (subjectClaim != null)
+				if (subjectClaim == null)
+				{
+					returnValue = this.Unauthorized();
+				}
+				else
 				{
 					var itemBoughtSuccessfully = this.inventoryService.BuyItem(itemId);
-					var jsonResult = new { ItemBoughtSuccessfully = itemBoughtSuccessfully };
+					
+					// add structure to the Json by serializing an anonymous type
+					var jsonResult = JsonConvert.SerializeObject(new { ItemBoughtSuccessfully = itemBoughtSuccessfully });
 					returnValue = this.Json(jsonResult);
 				}
 			}
 			catch (Exception)
 			{
-				return this.InternalServerError();
+				returnValue = this.InternalServerError();
 			}
 
 			return returnValue;

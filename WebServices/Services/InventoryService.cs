@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-
-using System.Transactions;
-
-using GildedRose.WebServices.DataAccess;
-using GildedRose.WebServices.Models;
-
-namespace GildedRose.WebServices.Services
+﻿namespace GildedRose.WebServices.Services
 {
+	using System;
+	using System.Collections.Generic;
+	using System.Transactions;
+	using DataAccess;
+	using Models;
+
 	public class InventoryService : IInventoryService
 	{
 		private readonly IDataStore dataStore;

@@ -1,19 +1,19 @@
-﻿// ReSharper disable NotAccessedVariable
+﻿// ReSharper disable NotAccessedVariable to handle cases where expected exceptions are thrown before the instance can be used
 namespace GildedRose.WebServices.Test
 {
 	using System;
 	using System.Collections.Generic;
+	using System.Security.Claims;
 	using System.Web.Http.Results;
 
 	using FluentAssertions;
 
-	using GildedRose.WebServices.Controllers;
-	using GildedRose.WebServices.Models;
-	using GildedRose.WebServices.Services;
+	using Controllers;
+	using Models;
+	using Services;
 
 	using Moq;
 
-	using Newtonsoft.Json;
 	using Newtonsoft.Json.Linq;
 
 	using NUnit.Framework;
@@ -43,7 +43,7 @@ namespace GildedRose.WebServices.Test
 
 			// act
 			var controller = new InventoryController(inventoryServiceMock.Object);
-			var jsonResponse = controller.Get() as System.Web.Http.Results.JsonResult<string>;
+			var jsonResponse = controller.Get() as JsonResult<string>;
 
 			// assert
 			JArray jsonArray = JArray.Parse(jsonResponse?.Content);
@@ -60,7 +60,7 @@ namespace GildedRose.WebServices.Test
 
 			// act
 			var controller = new InventoryController(inventoryServiceMock.Object);
-			var jsonResponse = controller.Get() as System.Web.Http.Results.JsonResult<string>;
+			var jsonResponse = controller.Get() as JsonResult<string>;
 
 			// assert
 			JArray jsonArray = JArray.Parse(jsonResponse?.Content);
@@ -77,7 +77,7 @@ namespace GildedRose.WebServices.Test
 
 			// act
 			var controller = new InventoryController(inventoryServiceMock.Object);
-			var jsonResponse = controller.Get() as System.Web.Http.Results.JsonResult<string>;
+			var jsonResponse = controller.Get() as JsonResult<string>;
 
 			// assert
 			JArray jsonArray = JArray.Parse(jsonResponse?.Content);
@@ -100,6 +100,83 @@ namespace GildedRose.WebServices.Test
 			
 			// assert
 			response.GetType().Should().Be(typeof(InternalServerErrorResult));
+		}
+
+		[Test]
+		public void BuyItem_NoItemId_ReturnsBadRequestError()
+		{
+			// arrange
+			var inventoryServiceMock = new Mock<IInventoryService>();
+			inventoryServiceMock.Setup(m => m.BuyItem(It.IsAny<string>())).Returns(true);
+
+			// act
+			var controller = new InventoryController(inventoryServiceMock.Object);
+			var response = controller.BuyItem(null);
+
+			// assert
+			response.GetType().Should().Be(typeof(BadRequestErrorMessageResult));
+		}
+
+		[Test]
+		public void BuyItem_NoClaims_ReturnsUnauthorized()
+		{
+			// arrange
+			var inventoryServiceMock = new Mock<IInventoryService>();
+			inventoryServiceMock.Setup(m => m.BuyItem(It.IsAny<string>())).Returns(true);
+
+			// act
+			var controller = new InventoryController(inventoryServiceMock.Object);
+			var response = controller.BuyItem("item id 1");
+
+			// assert
+			response.GetType().Should().Be(typeof(UnauthorizedResult));
+		}
+
+		[Test]
+		public void BuyItem_WithClaimsAndAvailableInventory_ReturnsJsonAsTrue()
+		{
+			// arrange
+			var inventoryServiceMock = new Mock<IInventoryService>();
+			inventoryServiceMock.Setup(m => m.BuyItem(It.IsAny<string>())).Returns(true);
+			var controller = new InventoryController(inventoryServiceMock.Object)
+			{
+				User = new ClaimsPrincipal(CreateControllerIdentity())
+			};
+
+			// act
+			var jsonResult = controller.BuyItem("item id 1") as JsonResult<string>;
+
+			// assert
+			dynamic json = JToken.Parse(jsonResult?.Content);
+			bool itemBoughtSuccessfully = json.ItemBoughtSuccessfully;
+			itemBoughtSuccessfully.Should().BeTrue();
+		}
+
+		[Test]
+		public void BuyItem_WithClaimsAndNoInventory_ReturnsJsonAsFalse()
+		{
+			// arrange
+			var inventoryServiceMock = new Mock<IInventoryService>();
+			inventoryServiceMock.Setup(m => m.BuyItem(It.IsAny<string>())).Returns(false);
+			var controller = new InventoryController(inventoryServiceMock.Object)
+			{
+				User = new ClaimsPrincipal(CreateControllerIdentity())
+			};
+
+			// act
+			var jsonResult = controller.BuyItem("item id 1") as JsonResult<string>;
+
+			// assert
+			dynamic json = JToken.Parse(jsonResult?.Content);
+			bool itemBoughtSuccessfully = json.ItemBoughtSuccessfully;
+			itemBoughtSuccessfully.Should().BeFalse();
+		}
+
+		private static ClaimsIdentity CreateControllerIdentity()
+		{
+			ClaimsIdentity identity = new ClaimsIdentity();
+			identity.AddClaim(new Claim("sub", "some.user"));
+			return identity;
 		}
 	}
 }

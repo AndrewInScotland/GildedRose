@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
-using IdentityServer3.Core.Models;
-
-namespace GildedRose.IdentityServer
+﻿namespace GildedRose.IdentityServer
 {
+	using System.Collections.Generic;
+	using IdentityServer3.Core.Models;
+
 	/// <summary>
 	/// In-memory implementation of the scopes known by the system.
 	/// </summary>

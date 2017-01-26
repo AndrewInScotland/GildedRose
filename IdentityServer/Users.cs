@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
-using IdentityServer3.Core.Services.InMemory;
-
-namespace GildedRose.IdentityServer
+﻿namespace GildedRose.IdentityServer
 {
+	using System.Collections.Generic;
+	using IdentityServer3.Core.Services.InMemory;
+
 	/// <summary>
 	/// In-memory implementation of the registered users.
 	/// </summary>

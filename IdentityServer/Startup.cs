@@ -1,8 +1,8 @@
-﻿using IdentityServer3.Core.Configuration;
-using Owin;
-
-namespace GildedRose.IdentityServer
+﻿namespace GildedRose.IdentityServer
 {
+	using IdentityServer3.Core.Configuration;
+	using Owin;
+
 	/// <summary>
 	/// The Startup class for the Owin web server.
 	/// </summary>

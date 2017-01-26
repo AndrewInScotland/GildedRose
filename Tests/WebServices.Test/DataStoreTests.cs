@@ -1,15 +1,13 @@
-﻿using System.Linq;
-
-using GildedRose.WebServices.DataAccess;
-using NUnit.Framework;
-using System;
-
-using FluentAssertions;
-
-using GildedRose.WebServices.Models;
+﻿// ReSharper disable NotAccessedVariable to handle cases where expected exceptions are thrown before the instance can be used
 namespace GildedRose.WebServices.Test
 {
-	using Newtonsoft.Json.Linq;
+	using System;
+	using System.Linq;
+	using NUnit.Framework;
+	using FluentAssertions;
+
+	using DataAccess;
+	using Models;
 
 	[TestFixture]
 	public class DataStoreTests
@@ -18,7 +16,6 @@ namespace GildedRose.WebServices.Test
 		public void Constructor_NoProvider_ThrowsArgumentNullException()
 		{
 			// arrange
-			// ReSharper disable once NotAccessedVariable
 			IDataStore dataStore;
 
 			// act

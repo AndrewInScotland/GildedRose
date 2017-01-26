@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Web.Http.Dependencies;
-
-using Microsoft.Practices.Unity;
-
-namespace GildedRose.WebServices
+﻿namespace GildedRose.WebServices
 {
+	using System;
+	using System.Collections.Generic;
+	using System.Web.Http.Dependencies;
+	using Microsoft.Practices.Unity;
+
 	/// <summary>
 	/// Resolves MVC controller dependencies (controllers with parameterized constructors) by using a Unity Container.
 	/// </summary>

@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿// ReSharper disable NotAccessedVariable to handle cases where expected exceptions are thrown before the instance can be used
+using NUnit.Framework;
 using System;
 using System.Linq;
 using FluentAssertions;
@@ -15,7 +16,6 @@ namespace GildedRose.WebServices.Test
 		public void Constructor_NoDataStore_ThrowsArgumentNullException()
 		{
 			// arrange
-			// ReSharper disable once NotAccessedVariable
 			IInventoryService service = null;
 
 			// act

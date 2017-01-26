@@ -1,9 +1,9 @@
-﻿using System;
-using Microsoft.Owin.Hosting;
-using Serilog;
-
-namespace GildedRose.IdentityServer
+﻿namespace GildedRose.IdentityServer
 {
+	using System;
+	using Microsoft.Owin.Hosting;
+	using Serilog;
+
 	/// <summary>
 	/// The Identity Server startup class.
 	/// </summary>

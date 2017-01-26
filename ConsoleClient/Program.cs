@@ -1,13 +1,10 @@
-﻿using System;
-using System.Net.Http;
-
-namespace GildedRose.ConsoleClient
+﻿namespace GildedRose.ConsoleClient
 {
+	using System;
 	using System.Collections.Generic;
 	using System.Linq;
-
+	using System.Net.Http;
 	using IdentityModel.Client;
-
 	using Newtonsoft.Json;
 	using Newtonsoft.Json.Linq;
 
@@ -25,16 +22,26 @@ namespace GildedRose.ConsoleClient
 		/// <param name="args">The command-line arguments, if any.</param>
 		public static void Main(string[] args)
         {
-			var allItems = GetAllItems();
-	        if (allItems.Count == 0)
+	        try
 	        {
-		        Console.WriteLine("Could not buy an item because no items are available.");
+				// GetAllItems returns a collection of dynamic Json objects
+				var allItems = GetAllItems();
+		        if (allItems.Count == 0)
+		        {
+			        Console.WriteLine("Could not buy an item because no items are available.");
+		        }
+		        else
+		        {
+					// arbitrarily buy the first item in the list
+					var firstItem = allItems.First();
+			        BuyItem(firstItem);
+		        }
 	        }
-	        else
+	        catch (Exception ex)
 	        {
-		        dynamic firstItem = allItems.First();
-				BuyItem(firstItem);
-			}
+		        Console.WriteLine(ex.Message + Environment.NewLine + ex);
+		        Environment.Exit(-1);
+	        }
 		}
 
 	    private static IList<dynamic> GetAllItems()
@@ -83,7 +90,8 @@ namespace GildedRose.ConsoleClient
 			{
 				// decode the json result
 				string responseBody = response.Content.ReadAsStringAsync().Result;
-				dynamic json = JToken.Parse(responseBody);
+				var jsonResponse = JsonConvert.DeserializeObject<string>(responseBody);
+				dynamic json = JToken.Parse(jsonResponse);
 				bool itemBoughtSuccessfully = json.ItemBoughtSuccessfully;
 
 				if (itemBoughtSuccessfully)

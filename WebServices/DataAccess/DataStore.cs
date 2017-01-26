@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
-using GildedRose.WebServices.Models;
-
-namespace GildedRose.WebServices.DataAccess
+﻿namespace GildedRose.WebServices.DataAccess
 {
+	using System;
+	using System.Collections.Generic;
+	using System.Linq;
+	using GildedRose.WebServices.Models;
+
 	public class DataStore : IDataStore
 	{
 		private readonly IDataProvider dataProvider;
