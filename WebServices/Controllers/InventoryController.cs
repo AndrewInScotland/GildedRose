@@ -3,7 +3,6 @@
 	using System;
 	using System.Security.Claims;
 	using System.Web.Http;
-	using Newtonsoft.Json;
 	using Services;
 
 	/// <summary>
@@ -45,11 +44,11 @@
 			try
 			{
 				var availableItems = this.inventoryService.GetAvailableItems();
-				var jsonResult = JsonConvert.SerializeObject(availableItems);
-				returnValue = this.Json(jsonResult);
+				returnValue = this.Json(availableItems);
 			}
 			catch (Exception)
 			{
+				// something went wrong. We should log this, but hide the internals from the API user.
 				returnValue = this.InternalServerError();
 			}
 
@@ -67,30 +66,30 @@
 		{
 			IHttpActionResult returnValue;
 
-			if (string.IsNullOrEmpty(itemId))
-			{
-				return this.BadRequest("Item Id can not be null");
-			}
-
 			try
 			{
-				var caller = this.User as ClaimsPrincipal;
-				var subjectClaim = caller?.FindFirst(UserIdentifierClaim);
-				if (subjectClaim == null)
+				if (string.IsNullOrEmpty(itemId))
 				{
-					returnValue = this.Unauthorized();
+					returnValue = this.BadRequest("Item Id can not be null");
 				}
 				else
 				{
-					var itemBoughtSuccessfully = this.inventoryService.BuyItem(itemId);
-					
-					// add structure to the Json by serializing an anonymous type
-					var jsonResult = JsonConvert.SerializeObject(new { ItemBoughtSuccessfully = itemBoughtSuccessfully });
-					returnValue = this.Json(jsonResult);
+					var caller = this.User as ClaimsPrincipal;
+					var subjectClaim = caller?.FindFirst(UserIdentifierClaim);
+					if (subjectClaim == null)
+					{
+						returnValue = this.Unauthorized();
+					}
+					else
+					{
+						var purchaseResult = this.inventoryService.BuyItem(itemId);
+						returnValue = this.Json(purchaseResult);
+					}
 				}
 			}
 			catch (Exception)
 			{
+				// something went wrong. We should log this, but hide the internals from the API user.
 				returnValue = this.InternalServerError();
 			}
 

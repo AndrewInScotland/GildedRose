@@ -1,16 +1,20 @@
-﻿using System.Web.Http;
-using GildedRose.WebServices.DataAccess;
-using GildedRose.WebServices.Services;
-using IdentityServer3.AccessTokenValidation;
-using Microsoft.Owin;
-using Microsoft.Practices.Unity;
-using Owin;
+﻿// The OwinStartup attribute indicates to Owin which class to instantiate as the Startup class
 
-// The OwinStartup attribute indicates to Owin which class to instantiate as the Startup class
+using Microsoft.Owin;
+
 [assembly: OwinStartup(typeof(GildedRose.WebServices.Startup))]
 
 namespace GildedRose.WebServices
 {
+	using System;
+	using System.Net.Http.Formatting;
+	using System.Web.Http;
+	using DataAccess;
+	using GildedRose.WebServices.Services;
+	using IdentityServer3.AccessTokenValidation;
+	using Microsoft.Practices.Unity;
+	using Owin;
+
 	/// <summary>
 	/// The startup class for the Web Services web app.
 	/// </summary>
@@ -46,6 +50,15 @@ namespace GildedRose.WebServices
 			// the balance of dependencies can be new instances each time
 			container.RegisterType<IInventoryService, InventoryService>();
 			config.DependencyResolver = new UnityDependencyResolver(container);
+
+			// make json the default response type
+	        config.Formatters.JsonFormatter.MediaTypeMappings.Add(
+		        new RequestHeaderMapping(
+			        "Accept",
+			        "text/html",
+			        StringComparison.InvariantCultureIgnoreCase,
+			        true,
+			        "application/json"));
 
 			// start as a Web Api
 			app.UseWebApi(config);

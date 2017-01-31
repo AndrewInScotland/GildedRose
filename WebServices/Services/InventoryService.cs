@@ -44,11 +44,11 @@
 		/// </summary>
 		/// <param name="itemId">The item identifier.</param>
 		/// <returns>
-		/// A value indicating whether or not the item could be purchased.
+		/// A result value indicating whether or not the item could be purchased.
 		/// </returns>
-		public bool BuyItem(string itemId)
+		public PurchaseResult BuyItem(string itemId)
 		{
-			bool itemBoughtSuccessfully = false;
+			var result = new PurchaseResult { Success = false };
 
 			using (TransactionScope scope = new TransactionScope())
 			{
@@ -59,11 +59,11 @@
 					item.InventoryCount--;
 					this.dataStore.SaveItem(item);
 					scope.Complete();
-					itemBoughtSuccessfully = true;
+					result.Success = true;
 				}
 			}
 
-			return itemBoughtSuccessfully;
+			return result;
 		}
 	}
 }

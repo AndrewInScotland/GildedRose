@@ -1,8 +1,10 @@
 ﻿// ReSharper disable NotAccessedVariable to handle cases where expected exceptions are thrown before the instance can be used
+// ReSharper disable PossibleNullReferenceException to allow unexpected NullRefExceptions to fail the test
 namespace GildedRose.WebServices.Test
 {
 	using System;
 	using System.Collections.Generic;
+	using System.Linq;
 	using System.Security.Claims;
 	using System.Web.Http.Results;
 
@@ -13,8 +15,6 @@ namespace GildedRose.WebServices.Test
 	using Services;
 
 	using Moq;
-
-	using Newtonsoft.Json.Linq;
 
 	using NUnit.Framework;
 
@@ -43,11 +43,10 @@ namespace GildedRose.WebServices.Test
 
 			// act
 			var controller = new InventoryController(inventoryServiceMock.Object);
-			var jsonResponse = controller.Get() as JsonResult<string>;
+			var jsonResponse = controller.Get() as JsonResult<IList<Item>>;
 
 			// assert
-			JArray jsonArray = JArray.Parse(jsonResponse?.Content);
-			jsonArray.Count.Should().Be(0);
+			jsonResponse.Content.Count.Should().Be(0);
 		}
 
 		[Test]
@@ -60,11 +59,10 @@ namespace GildedRose.WebServices.Test
 
 			// act
 			var controller = new InventoryController(inventoryServiceMock.Object);
-			var jsonResponse = controller.Get() as JsonResult<string>;
+			var jsonResponse = controller.Get() as JsonResult<IList<Item>>;
 
 			// assert
-			JArray jsonArray = JArray.Parse(jsonResponse?.Content);
-			jsonArray.Count.Should().Be(2);
+			jsonResponse.Content.Count.Should().Be(2);
 		}
 
 		[Test]
@@ -77,14 +75,13 @@ namespace GildedRose.WebServices.Test
 
 			// act
 			var controller = new InventoryController(inventoryServiceMock.Object);
-			var jsonResponse = controller.Get() as JsonResult<string>;
+			var jsonResponse = controller.Get() as JsonResult<IList<Item>>;
 
 			// assert
-			JArray jsonArray = JArray.Parse(jsonResponse?.Content);
-			dynamic itemOne = jsonArray[0];
-			((string)itemOne.Name).Should().Be("item 1");
-			dynamic itemTwo = jsonArray[1];
-			((string)itemTwo.Name).Should().Be("item 2");
+			var itemOne = jsonResponse?.Content.First();
+			itemOne.Name.Should().Be("item 1");
+			var itemTwo = jsonResponse?.Content.Last();
+			itemTwo.Name.Should().Be("item 2");
 		}
 
 		[Test]
@@ -107,7 +104,7 @@ namespace GildedRose.WebServices.Test
 		{
 			// arrange
 			var inventoryServiceMock = new Mock<IInventoryService>();
-			inventoryServiceMock.Setup(m => m.BuyItem(It.IsAny<string>())).Returns(true);
+			inventoryServiceMock.Setup(m => m.BuyItem(It.IsAny<string>())).Returns(new PurchaseResult { Success = true });
 
 			// act
 			var controller = new InventoryController(inventoryServiceMock.Object);
@@ -122,7 +119,7 @@ namespace GildedRose.WebServices.Test
 		{
 			// arrange
 			var inventoryServiceMock = new Mock<IInventoryService>();
-			inventoryServiceMock.Setup(m => m.BuyItem(It.IsAny<string>())).Returns(true);
+			inventoryServiceMock.Setup(m => m.BuyItem(It.IsAny<string>())).Returns(new PurchaseResult { Success = true });
 
 			// act
 			var controller = new InventoryController(inventoryServiceMock.Object);
@@ -137,19 +134,17 @@ namespace GildedRose.WebServices.Test
 		{
 			// arrange
 			var inventoryServiceMock = new Mock<IInventoryService>();
-			inventoryServiceMock.Setup(m => m.BuyItem(It.IsAny<string>())).Returns(true);
+			inventoryServiceMock.Setup(m => m.BuyItem(It.IsAny<string>())).Returns(new PurchaseResult { Success = true });
 			var controller = new InventoryController(inventoryServiceMock.Object)
 			{
 				User = new ClaimsPrincipal(CreateControllerIdentity())
 			};
 
 			// act
-			var jsonResult = controller.BuyItem("item id 1") as JsonResult<string>;
+			var jsonResult = controller.BuyItem("item id 1") as JsonResult<PurchaseResult>;
 
 			// assert
-			dynamic json = JToken.Parse(jsonResult?.Content);
-			bool itemBoughtSuccessfully = json.ItemBoughtSuccessfully;
-			itemBoughtSuccessfully.Should().BeTrue();
+			jsonResult.Content.Success.Should().BeTrue();
 		}
 
 		[Test]
@@ -157,19 +152,17 @@ namespace GildedRose.WebServices.Test
 		{
 			// arrange
 			var inventoryServiceMock = new Mock<IInventoryService>();
-			inventoryServiceMock.Setup(m => m.BuyItem(It.IsAny<string>())).Returns(false);
+			inventoryServiceMock.Setup(m => m.BuyItem(It.IsAny<string>())).Returns(new PurchaseResult { Success = false });
 			var controller = new InventoryController(inventoryServiceMock.Object)
 			{
 				User = new ClaimsPrincipal(CreateControllerIdentity())
 			};
 
 			// act
-			var jsonResult = controller.BuyItem("item id 1") as JsonResult<string>;
+			var jsonResult = controller.BuyItem("item id 1") as JsonResult<PurchaseResult>;
 
 			// assert
-			dynamic json = JToken.Parse(jsonResult?.Content);
-			bool itemBoughtSuccessfully = json.ItemBoughtSuccessfully;
-			itemBoughtSuccessfully.Should().BeFalse();
+			jsonResult.Content.Success.Should().BeFalse();
 		}
 
 		private static ClaimsIdentity CreateControllerIdentity()

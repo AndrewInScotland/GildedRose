@@ -18,7 +18,7 @@
 		/// Buys the item.
 		/// </summary>
 		/// <param name="itemId">The item identifier.</param>
-		/// <returns>A value indicating whether or not the item could be purchased.</returns>
-		bool BuyItem(string itemId);
+		/// <returns>A result value indicating whether or not the item could be purchased.</returns>
+		PurchaseResult BuyItem(string itemId);
 	}
 }

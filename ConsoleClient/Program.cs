@@ -57,9 +57,11 @@
 		    {
 				Console.WriteLine("Get Items Succeeded:");
 				var responseBody = response.Content.ReadAsStringAsync().Result;
-			    var jsonResponse = JsonConvert.DeserializeObject<string>(responseBody);
-			    JArray jsonArray = JArray.Parse(jsonResponse);
-			    dynamic boats = jsonArray;
+				
+				// convert to a dynamic array
+				JArray jsonArray = JArray.Parse(responseBody);
+				dynamic boats = jsonArray;
+
 				foreach (dynamic boat in boats)
 				{
 					Console.WriteLine($"Boat Name:'{boat.Name}' Decription:'{boat.Description}' Price:{boat.Price} Inventory Remaining:{boat.InventoryCount}");
@@ -90,9 +92,10 @@
 			{
 				// decode the json result
 				string responseBody = response.Content.ReadAsStringAsync().Result;
-				var jsonResponse = JsonConvert.DeserializeObject<string>(responseBody);
-				dynamic json = JToken.Parse(jsonResponse);
-				bool itemBoughtSuccessfully = json.ItemBoughtSuccessfully;
+				
+				// convert to a dynamic object so we can easily examine its known properties
+				dynamic purchaseResult = JToken.Parse(responseBody);
+				bool itemBoughtSuccessfully = purchaseResult.Success;
 
 				if (itemBoughtSuccessfully)
 				{
@@ -107,10 +110,7 @@
 
 		private static TokenResponse GetUserToken()
 		{
-			var client = new TokenClient(
-				   IdentityServiceUrl,
-				   "gildedrose",
-			 "8D29FA9F-2F39-4985-8ED8-3DCBED217FED");
+			var client = new TokenClient(IdentityServiceUrl, "gildedrose", "8D29FA9F-2F39-4985-8ED8-3DCBED217FED");
 
 			return client.RequestResourceOwnerPasswordAsync("bob", "secret", "gildedroseapi").Result;
 		}

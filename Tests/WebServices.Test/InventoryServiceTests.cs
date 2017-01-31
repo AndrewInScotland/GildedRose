@@ -51,10 +51,10 @@ namespace GildedRose.WebServices.Test
 			dataStore.SaveItem(firstItem);
 
 			// act
-			var itemBoughtSuccessfully = service.BuyItem(firstItem.Id);
+			var purchaseResult = service.BuyItem(firstItem.Id);
 
 			// assert
-			itemBoughtSuccessfully.Should().BeTrue();
+			purchaseResult.Success.Should().BeTrue();
 		}
 
 
@@ -89,10 +89,10 @@ namespace GildedRose.WebServices.Test
 			dataStore.SaveItem(firstItem);
 
 			// act
-			var itemBoughtSuccessfully = service.BuyItem(firstItem.Id);
+			var purchaseResult = service.BuyItem(firstItem.Id);
 
 			// assert
-			itemBoughtSuccessfully.Should().BeFalse();
+			purchaseResult.Success.Should().BeFalse();
 		}
 
 		[Test]
@@ -122,10 +122,10 @@ namespace GildedRose.WebServices.Test
 			var service = new InventoryService(dataStore);
 
 			// act
-			var itemBoughtSuccessfully = service.BuyItem("some invalid id");
+			var purchaseResult = service.BuyItem("some invalid id");
 
 			// assert
-			itemBoughtSuccessfully.Should().BeFalse();
+			purchaseResult.Success.Should().BeFalse();
 		}
 	}
 }
