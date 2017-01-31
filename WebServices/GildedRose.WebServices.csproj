@@ -143,6 +143,7 @@
   <ItemGroup>
     <Compile Include="DataAccess\DataProvider.cs" />
     <Compile Include="DataAccess\IDataProvider.cs" />
+    <Compile Include="DataAccess\ItemEntity.cs" />
     <Compile Include="Models\PurchaseResult.cs" />
     <Compile Include="UnityDependencyResolver.cs" />
     <Compile Include="DataAccess\DataStore.cs" />

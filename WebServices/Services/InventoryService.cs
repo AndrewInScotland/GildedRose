@@ -36,7 +36,16 @@
 		/// </returns>
 		public IList<Item> GetAvailableItems()
 		{
-			return this.dataStore.GetItems();
+			var items = new List<Item>();
+			var itemEntities = this.dataStore.GetItems();
+
+			// this could be converted into a pretty Linq statement, but I prefer the clarity and debugability of the loop.
+			foreach (var itemEntity in itemEntities)
+			{
+				items.Add(itemEntity.ToModel());
+			}
+
+			return items;
 		}
 
 		/// <summary>
@@ -50,6 +59,7 @@
 		{
 			var result = new PurchaseResult { Success = false };
 
+			// use a transaction to ensure atomicty of this operation
 			using (TransactionScope scope = new TransactionScope())
 			{
 				var item = this.dataStore.GetItem(itemId);

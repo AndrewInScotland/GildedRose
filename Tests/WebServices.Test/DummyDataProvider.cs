@@ -1,22 +1,21 @@
 ﻿using System.Collections.Generic;
 using GildedRose.WebServices.DataAccess;
-using GildedRose.WebServices.Models;
 
 namespace GildedRose.WebServices.Test
 {
 	public class DummyDataProvider : IDataProvider
 	{
-		public IList<Item> ItitializeData()
+		public IList<ItemEntity> ItitializeData()
 		{
-			return new List<Item>
+			return new List<ItemEntity>
 						{
-							new Item
+							new ItemEntity
 								{
 									Id = "some boat Id",
 									Name = "some boat name",
 									Description = "some boat description"
 								},
-							new Item
+							new ItemEntity
 								{
 									Id = "some other boat Id",
 									Name = "some other boat name",

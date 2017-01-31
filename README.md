@@ -5,7 +5,7 @@
 Open the solution in Visual Studio 2015, then Rebuild All. You can run the tests from whatever test tool you are using (I used ReSharper 2015).
 
 ## How to run
-The WebServices project uses IISExpress, so it's easiest to run from Visual Studio. 
+The WebServices project uses IISExpress, so it's easiest to run from Visual Studio:
 
 - From the solution properties, choose multiple startup projects:
 	- GildedRose.IdentityServer
@@ -21,6 +21,7 @@ The WebServices project uses IISExpress, so it's easiest to run from Visual Stud
 This implementation is all in-memory and represents the bare minimum implementation of IdentityServer3.
 - I used a Service Layer to isolate business logic.
 - I used a REST-type API, returning JSON (this is the easiest format for mobile and web teams to work with). 
+- I used an `ItemEntity` class for memory storage, and an additional `Item` class as a Model or DTO (Data Transfer Object). This provides an isolation layer between the Web API and the Storage layer. When retrieving data, the Service layer converts from an Entity (which may later represent an actual database object) to a simple Model. In this case the advantages are subtle, but later, when more data operations are supported, the advantages become clearer.  
 
 ## Choice of data format
 As in Design Decisions above, I used Json for the data format, which will support the majority of downstream clients.
@@ -31,11 +32,9 @@ To get the list of items, just hit this URL:
 
 ###Sample response:
 
-    "[{\"Id\":\"746E4CFB-7DF8-46BC-9A94-923F29D17907\",\"Name\":\"CSY 37\",
-	\"Description\":\"37 foot cutter-rigged sloop\",\"Price\":40000,
-	\"InventoryCount\":2},{\"Id\":\"2552E1C7-64C5-460F-B550-60F3A720033F\",
-	\"Name\":\"Venture 24\",\"Description\":\"24 foot swing keel\",\"Price
-	\":5000,\"InventoryCount\":10}]"
+    [{"Id":"746E4CFB-7DF8-46BC-9A94-923F29D17907","Name":"CSY 37","Description":"37 foot cutter-rigged 
+	sloop","Price":40000,"InventoryCount":3},{"Id":"2552E1C7-64C5-460F-B550-60F3A720033F","Name":"Venture
+	 24","Description":"24 foot swing keel","Price":5000,"InventoryCount":10}]
 
 ## How do we know if a user is authenticated?
 The BuyItem method on the Inventory Controller sports the [Authorize] attribute, which requires that a valid JWT (Json Web Token) is supplied in the HTTP headers for that method. This behavior is configured in the Startup class.
@@ -61,8 +60,6 @@ My solution is a very basic example of an inventory system. A more realistic sol
 
 ### If I had more time, I would:
 
-- Add basic debug/info logging
+- Add logging
 - Add more exception handling
-- Add a separation layer between the Service layer and the Data Access layer. As it stands currently, the 
-controller can change an Item's property and it will be immediately reflected in the data layer, without even having to call SaveItem. This wouldn't happen in reality because we'd use some sort of persistence layer, which would create new instances of items as they are loaded, and then throw them away after being saved. But even then you usually want an isolation layer between the Controller and the Data Access Layer. I usually use DTO's (or Models) for this transformation, and use a dedicated Entity class in the Data Access Layer.
 - Provide sample JavaScript code. This is useful for illustrating Ajax calls and Json formats to downstream teams.

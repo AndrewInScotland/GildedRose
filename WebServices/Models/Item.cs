@@ -3,6 +3,11 @@
 	/// <summary>
 	/// Represents an item for sale at the Gilded Rose.
 	/// </summary>
+	/// <remarks>
+	/// The Item class can be thought of as a model or a Data Transfer Object. 
+	/// This serves as an isolation layer between the Presentation Layer and the Data Layer.
+	/// See also the ItemEntity class, which represents an object ready for storage.
+	/// </remarks>
 	public class Item
 	{
 		/// <summary>

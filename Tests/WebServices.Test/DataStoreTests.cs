@@ -5,10 +5,8 @@ namespace GildedRose.WebServices.Test
 	using System.Linq;
 	using NUnit.Framework;
 	using FluentAssertions;
-
 	using DataAccess;
-	using Models;
-
+	
 	[TestFixture]
 	public class DataStoreTests
 	{
@@ -59,7 +57,7 @@ namespace GildedRose.WebServices.Test
 		{
 			// arrange
 			var dataStore = new DataStore(new DummyDataProvider());
-			var newItem = new Item { Id = "some new id", Name = "some new name" };
+			var newItem = new ItemEntity { Id = "some new id", Name = "some new name" };
 			dataStore.SaveItem(newItem);
 
 			// act
@@ -74,7 +72,7 @@ namespace GildedRose.WebServices.Test
 		{
 			// arrange
 			var dataStore = new DataStore(new DummyDataProvider());
-			var newItem = new Item { Id = null, Name = "some new name" };
+			var newItem = new ItemEntity { Id = null, Name = "some new name" };
 			dataStore.SaveItem(newItem);
 
 			// act
@@ -91,7 +89,7 @@ namespace GildedRose.WebServices.Test
 			var dataStore = new DataStore(new DummyDataProvider());
 
 			// act
-			var newItem = new Item { Id = null, Name = "some new name" };
+			var newItem = new ItemEntity { Id = null, Name = "some new name" };
 			dataStore.SaveItem(newItem);
 
 			// assert
@@ -105,7 +103,7 @@ namespace GildedRose.WebServices.Test
 			var dataStore = new DataStore(new DummyDataProvider());
 
 			// act
-			var newItem = new Item { Id = "some new id", Name = "some new name" };
+			var newItem = new ItemEntity { Id = "some new id", Name = "some new name" };
 			dataStore.SaveItem(newItem);
 
 			// assert

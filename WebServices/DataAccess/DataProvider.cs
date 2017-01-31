@@ -1,7 +1,6 @@
 ﻿namespace GildedRose.WebServices.DataAccess
 {
 	using System.Collections.Generic;
-	using Models;
 
 	/// <summary>
 	/// A temporary memory-only data provider.
@@ -13,11 +12,11 @@
 		/// Populates this data provider with ititial data.
 		/// </summary>
 		/// <returns>A list of inventory items.</returns>
-		public IList<Item> ItitializeData()
+		public IList<ItemEntity> ItitializeData()
 		{
-			return new List<Item>
+			return new List<ItemEntity>
 						{
-							new Item
+							new ItemEntity
 								{
 									Id = "746E4CFB-7DF8-46BC-9A94-923F29D17907",
 									Name = "CSY 37",
@@ -25,7 +24,7 @@
 									Price = 40000,
 									InventoryCount = 3
 								},
-							new Item
+							new ItemEntity
 								{
 									Id = "2552E1C7-64C5-460F-B550-60F3A720033F",
 									Name = "Venture 24",

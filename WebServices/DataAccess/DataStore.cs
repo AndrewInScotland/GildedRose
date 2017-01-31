@@ -3,8 +3,7 @@
 	using System;
 	using System.Collections.Generic;
 	using System.Linq;
-	using Models;
-
+	
 	/// <summary>
 	/// The storage layer for inventory data.
 	/// </summary>
@@ -13,7 +12,7 @@
 	{
 		private readonly IDataProvider dataProvider;
 
-		private IList<Item> items;
+		private IList<ItemEntity> items;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="DataStore"/> class.
@@ -30,7 +29,7 @@
 			this.dataProvider = dataProvider;
 		}
 
-		private IList<Item> Items
+		private IList<ItemEntity> Items
 		{
 			get
 			{
@@ -47,7 +46,7 @@
 		/// Gets all of the items from storage.
 		/// </summary>
 		/// <returns> A list of items.</returns>
-		public IList<Item> GetItems()
+		public IList<ItemEntity> GetItems()
 		{
 			return this.Items;
 		}
@@ -57,7 +56,7 @@
 		/// </summary>
 		/// <param name="id">The identifier.</param>
 		/// <returns> The item.</returns>
-		public Item GetItem(string id)
+		public ItemEntity GetItem(string id)
 		{
 			return this.Items.FirstOrDefault(item => item.Id == id);
 		}
@@ -66,10 +65,10 @@
 		/// Saves the specified item to storage.
 		/// </summary>
 		/// <param name="itemToSave">The item to save.</param>
-		public void SaveItem(Item itemToSave)
+		public void SaveItem(ItemEntity itemToSave)
 		{
 			// find it by Id
-			Item existingItem = null;
+			ItemEntity existingItem = null;
 			if (!string.IsNullOrEmpty(itemToSave.Id))
 			{
 				existingItem = this.Items.FirstOrDefault(i => i.Id == itemToSave.Id);

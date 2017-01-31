@@ -1,7 +1,6 @@
 namespace GildedRose.WebServices.DataAccess
 {
 	using System.Collections.Generic;
-	using Models;
 
 	/// <summary>
 	/// Interface for the data provider. Allows for temporary in-memory instances as needed.
@@ -12,6 +11,6 @@ namespace GildedRose.WebServices.DataAccess
 		/// Populates this data provider with ititial data.
 		/// </summary>
 		/// <returns>A list of inventory items.</returns>
-		IList<Item> ItitializeData();
+		IList<ItemEntity> ItitializeData();
 	}
 }

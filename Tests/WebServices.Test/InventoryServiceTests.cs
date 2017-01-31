@@ -40,6 +40,27 @@ namespace GildedRose.WebServices.Test
 		}
 
 		[Test]
+		public void GetAvailableItems_AfterSettingModelProperty_ReturnsStoredItem()
+		{
+			/* An unusual test, to be sure. We just want to make sure that the memory-only storage system
+			 * does not contain direct references to our Item model. 
+			 */
+			
+			// arrange
+			var dataStore = new DataStore(new DummyDataProvider());
+			var service = new InventoryService(dataStore);
+			var firstResultSet = service.GetAvailableItems();
+			var editedItem = firstResultSet.First();
+			editedItem.Description = "This item has been changed";
+			
+			// act
+			var secondResultSet = service.GetAvailableItems();
+
+			// assert
+			secondResultSet.First().Description.Should().NotContain("has been changed");
+		}
+		
+		[Test]
 		public void BuyItem_WithInventory_ReturnsTrue()
 		{
 			// arrange

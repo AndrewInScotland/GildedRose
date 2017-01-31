@@ -86,6 +86,7 @@
     <Compile Include="DummyDataProvider.cs" />
     <Compile Include="InventoryControllerTests.cs" />
     <Compile Include="InventoryServiceTests.cs" />
+    <Compile Include="ItemEntityTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
